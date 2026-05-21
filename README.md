@@ -74,18 +74,11 @@ Resultados observados:
 
 ### Regresion logistica
 
-La regresion logistica se usa como modelo principal porque transforma la combinacion lineal de variables en una probabilidad acotada entre 0 y 1 mediante la funcion sigmoide. Esto la hace metodologicamente mas apropiada para clasificacion binaria.
-
-Resultados sobre el conjunto de prueba:
-
-- Accuracy: 77.05%.
-- Precision: 78.12%.
-- Recall / sensibilidad: 78.12%.
-- F1-score: 78.12%.
-- AUC ROC: 0.8384.
 - Matriz de confusion: `[[22, 7], [7, 25]]`.
 
 En contexto clinico, la sensibilidad es especialmente importante porque los falsos negativos representan pacientes con enfermedad que el modelo clasificaria como sanos. En esta ejecucion hubo 7 falsos negativos en el conjunto de prueba.
+
+Adicionalmente, se realizo un analisis de **Significancia Estadistica (p-values)** usando `statsmodels`. Se comprobo que variables como el tipo de dolor de pecho ($p \approx 0.000$) y la frecuencia cardiaca maxima ($p = 0.026$) aportan informacion estadisticamente significativa para el diagnostico, superando la barrera del 5% ($p < 0.05$). Esto permite rechazar la hipotesis nula de que dichas variables no tienen efecto, validando su gran peso predictivo.
 
 ## Estructura del repositorio
 

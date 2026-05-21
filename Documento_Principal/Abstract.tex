@@ -1,0 +1,34 @@
+\twocolumn
+[
+\begin{@twocolumnfalse}
+\maketitle
+\begin{abstract}
+\vspace*{0.5cm}
+\justify
+\fontsize{10pt}{10pt}\selectfont
+
+Este artículo presenta un análisis estadístico y modelado predictivo para la detección de enfermedades cardíacas utilizando el dataset "Heart Disease" de la Fundación Clínica Cleveland ($N = 303$). A diferencia de los modelos lineales que fallan al ajustarse a una variable discreta, este estudio implementa una regresión logística binaria para estimar la probabilidad clínica real de padecer la enfermedad. El análisis exploratorio confirma que variables como la frecuencia cardíaca máxima (\textit{thalach}) y el colesterol tienen un fuerte impacto en el diagnóstico. Tras aplicar optimización LBFGS y regularización L2, el modelo alcanzó una exactitud general del 77.1\,\% en el conjunto de prueba. De manera crítica para el contexto médico, logró una sensibilidad del 78.1\,\% minimizando los falsos negativos a tan solo 7 casos, y obtuvo un Área Bajo la Curva (AUC) de 0.838, validando su robustez predictiva y relevancia clínica como herramienta de apoyo temprano.
+
+\keywordsSpan{Machine Learning Clínico, Regresión Logística, Enfermedades Cardíacas, Predicción Médica, Sensibilidad.}
+\end{abstract}
+\vspace{0.5cm}
+
+\hspace*{0.7cm}
+\textit{Entrega: \today}
+\vspace*{0.5cm}
+
+
+\renewcommand{\abstractname}{ABSTRACT}
+\begin{abstract}
+\vspace*{0.5cm}
+\justify
+
+This paper presents a statistical analysis and predictive modeling approach for the detection of heart disease using the "Heart Disease" dataset from the Cleveland Clinic Foundation ($N = 303$). Unlike linear models that fail to fit discrete variables, this study implements a binary logistic regression to estimate the true clinical probability of suffering from the disease. Exploratory analysis confirms that variables such as maximum heart rate (\textit{thalach}) and cholesterol have a strong impact on the diagnosis. After applying LBFGS optimization and L2 regularization, the model achieved an overall accuracy of 77.1\,\% on the test set. Critically for the medical context, it achieved a sensitivity of 78.1\,\%, minimizing false negatives to only 7 cases, and obtained an Area Under the Curve (AUC) of 0.838, validating its predictive robustness and clinical relevance as an early support tool.
+
+\keywordsEng{Clinical Machine Learning, Logistic Regression, Heart Disease, Medical Prediction, Sensitivity.}
+\end{abstract}
+
+\vspace*{0.5cm}  %%% Espacio entre el abstract y las columnas
+
+\end{@twocolumnfalse}
+]

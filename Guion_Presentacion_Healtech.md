@@ -36,11 +36,13 @@ El error fundamental aquí fue matemático y conceptual. Al ser nuestro diagnós
 
 ## [ALEJANDRO PARDO] - Regresión Logística, Evaluación y Conclusiones (Slides 6 a 10)
 
-**Slide 6: Evolución Metodológica (Regresión Logística)**
+**Slide 6: Evolución Metodológica y Significancia (Regresión Logística)**
 "Y es aquí donde entra la solución matemática ideal para nuestro proyecto: La Regresión Logística. 
 Para arreglar el error del modelo lineal, nosotros mapeamos las características a lo que conocemos como el 'Log-Odds' o logaritmo de las probabilidades, y luego lo pasamos por la función Sigmoide. Lo que hace esta fórmula matemática que ven en pantalla es 'aplastar' o restringir cualquier salida lineal para que caiga estrictamente entre 0 y 1. 
 Además, especificamos parámetros robustos en la librería: utilizamos el solver 'LBFGS' para una optimización eficiente de la Máxima Verosimilitud (MLE), y aplicamos una regularización 'L2' (Ridge) para evitar el sobreajuste de los coeficientes (betas).
-Esto es revolucionario para nuestro caso porque nos permite transformar la predicción abstracta en una probabilidad clínica real y acotada, dándonos el poder de establecer un umbral de decisión dinámico."
+
+Para comprobar que nuestros hallazgos no fueran una mera coincidencia estadística, extrajimos los 'p-values' (valores p) del modelo. En estadística, un p-value menor a 0.05 nos indica que una variable aporta información genuina para el diagnóstico. Sorprendentemente, descubrimos que síntomas como el tipo de dolor de pecho y frecuencias cardíacas muy altas tienen p-values muy cercanos a cero, confirmando que son factores altamente significativos que rompen con la hipótesis de que ocurran por azar.
+Esto es revolucionario para nuestro caso porque nos permite transformar la predicción abstracta en una probabilidad clínica real, acotada y estadísticamente validada, dándonos el poder de establecer un umbral de decisión dinámico."
 
 **Slide 7: Evaluación Logística y Matriz de Confusión**
 "Para comprobar qué tan bueno es este nuevo modelo, usamos la Matriz de Confusión. En nuestro conjunto de prueba (datos invisibles para la máquina), logramos una exactitud general del 77.1%. 
