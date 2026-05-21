@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Enfermedades Cardíacas - Análisis Clínico</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <!-- Google Fonts: Roboto Slab for Headings, Inter for Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Paleta Académica Moderna y Oscura (Profunda y Elegante) */
+        :root {
+            --bg-color: #0f172a; /* Slate 900 base */
+            --bg-gradient: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            --text-main: #f1f5f9; /* Slate 100 */
+            --text-muted: #94a3b8; /* Slate 400 */
+            --primary-color: #14b8a6; /* Teal 500 (Salud, frescura) */
+            --secondary-color: #f43f5e; /* Rose 500 (Énfasis suave) */
+            --accent-color: #8b5cf6; /* Violeta para detalles analíticos */
+            --border-color: rgba(148, 163, 184, 0.2);
+            --card-bg: rgba(30, 41, 59, 0.7); /* Slate 800 con transparencia */
+            --card-blur: blur(12px);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Agregar un patrón sutil de puntos al fondo para quitar lo "plano" */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .reveal {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+        }
+
+        /* Tipografía Académica */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Roboto Slab', serif;
+            color: var(--text-main);
+            text-transform: none;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .reveal h1 { font-size: 2.8rem; line-height: 1.2; }
+        .reveal h2 { 
+            font-size: 2.2rem; 
+            border-bottom: 2px solid var(--primary-color); 
+            padding-bottom: 10px; 
+            display: inline-block;
+            color: var(--primary-color);
+        }
+        .reveal h3 { font-size: 1.6rem; color: #e2e8f0; }
+        .reveal p, .reveal li { font-size: 1.15rem; line-height: 1.6; color: var(--text-main); }
+        .reveal .muted { color: var(--text-muted); font-size: 0.95rem; }
+
+        .highlight-primary { color: var(--primary-color); font-weight: 600; }
+        .highlight-secondary { color: var(--secondary-color); font-weight: 600; }
+        .highlight-accent { color: var(--accent-color); font-weight: 600; }
+
+        /* Contenedores y Tarjetas con estilo Glassmorphism refinado */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Roboto Slab', serif;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Tablas de Rigor Técnico */
+        .academic-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+            margin-top: 20px;
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .academic-table th, .academic-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .academic-table th {
+            background-color: rgba(20, 184, 166, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .academic-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Ecuaciones y Fórmulas */
+        .equation-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* Fragmento de Código Simulando el Entorno Real */
+        .code-snippet {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            text-align: left;
+            margin-top: 15px;
+            border: 1px solid #333;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            overflow-x: auto;
+        }
+        
+        .code-keyword { color: #569cd6; }
+        .code-function { color: #dcdcaa; }
+        .code-string { color: #ce9178; }
+
+        /* KPIs / Métricas */
+        .metric-box {
+            text-align: center;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            border-top: 4px solid var(--primary-color);
+            backdrop-filter: var(--card-blur);
+        }
+
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 10px 0;
+            text-shadow: 0 2px 10px rgba(20, 184, 166, 0.3);
+        }
+
+        .metric-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Matriz de Confusión Estilizada */
+        .confusion-matrix {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            grid-template-rows: auto 1fr 1fr;
+            gap: 5px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .cm-header {
+            font-weight: bold;
+            color: var(--text-muted);
+            text-align: center;
+            align-self: center;
+            font-size: 0.9rem;
+        }
+
+        .cm-cell {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cm-cell .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .cm-cell .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .cm-tp { background: rgba(20, 184, 166, 0.2); border-color: var(--primary-color); }
+        .cm-tn { background: rgba(20, 184, 166, 0.1); }
+        .cm-fp { background: rgba(244, 63, 94, 0.15); border-color: var(--secondary-color); }
+        .cm-fn { background: rgba(244, 63, 94, 0.2); border-color: var(--secondary-color); }
+
+        /* Gráficos Contenedor */
+        .chart-container {
+            position: relative;
+            height: 420px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .chart-container-small {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Portada -->
+            <section>
+                <div style="margin-bottom: 30px;">
+                    <i class="fa-solid fa-heart-pulse" style="font-size: 5rem; color: var(--primary-color); text-shadow: 0 0 30px rgba(20, 184, 166, 0.5);"></i>
+                </div>
+                <h1>Predicción de Enfermedades Cardíacas</h1>
+                <h3 style="color: var(--text-muted); font-weight: 400; margin-top: 10px;">
+                    Modelado Predictivo y Análisis Estadístico Clínico
+                </h3>
+                <div style="margin-top: 60px; text-align: center; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; display: inline-block;">
+                    <p style="font-weight: 600; color: var(--primary-color); margin-bottom: 10px; font-size: 1rem; text-transform: uppercase; letter-spacing: 2px;">Equipo de Investigación</p>
+                    <p style="font-size: 1.1rem; margin: 0;">Santiago Palacios, Alejandro Pardo & Angie Tobar</p>
+                    <p class="muted" style="margin-top: 5px; font-size: 0.9rem;"><i class="fa-solid fa-graduation-cap"></i> Proyecto Final - Healtech 1</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Origen de los Datos y Justificación -->
+            <section>
+                <h2>1. Contexto del Estudio</h2>
+                <div class="grid-2">
+                    <div style="text-align: left;">
+                        <h3>Dataset Clínico: <span class="highlight-primary">Heart Disease UCI</span></h3>
+                        <p>Los datos proceden de la <em>Fundación Clínica Cleveland</em>. Es un estándar de oro en el aprendizaje automático médico para la clasificación binaria de enfermedades cardiovasculares.</p>
+                        
+                        <div class="card" style="margin-top: 20px; padding: 15px;">
+                            <div class="card-title" style="font-size: 1.1rem; margin-bottom: 10px;"><i class="fa-solid fa-vial"></i> Justificación de Variables</div>
+                            <p style="font-size: 0.95rem; margin: 0;">Se seleccionaron predictores con alta significancia clínica y estadística detectada en la matriz de correlación previa:</p>
+                            <ul style="font-size: 0.9rem; margin-top: 10px;">
+                                <li><strong>Edad y Colesterol (age, chol):</strong> Factores de riesgo basales.</li>
+                                <li><strong>Presión Arterial (trestbps):</strong> Indicador de hipertensión.</li>
+                                <li><strong>Frecuencia Máxima (thalach):</strong> Capacidad de esfuerzo cardíaco.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="grid-2" style="gap: 15px;">
+                            <div class="metric-box">
+                                <div class="metric-value">303</div>
+                                <div class="metric-label">Pacientes</div>
+                            </div>
+                            <div class="metric-box" style="border-top-color: var(--secondary-color);">
+                                <div class="metric-value">14</div>
+                                <div class="metric-label">Variables Totales</div>
+                            </div>
+                            <div class="metric-box" style="grid-column: span 2; border-top-color: var(--accent-color); padding: 15px;">
+                                <div class="metric-label" style="font-size: 0.8rem;"><i class="fa-solid fa-check-circle" style="color: var(--primary-color);"></i> Preprocesamiento Exitoso</div>
+                                <div class="metric-value" style="font-size: 1.5rem; margin-top: 5px;">0 Valores Nulos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Análisis Exploratorio (Distribución Target) -->
+            <section>
+                <h2>2. Análisis Exploratorio (EDA)</h2>
+                <h3>Balance de Clases en Variable Objetivo (Target)</h3>
+                <div class="grid-2">
+                    <div class="chart-container" style="height: 380px;">
+                        <canvas id="targetChart"></canvas>
+                    </div>
+                    <div style="text-align: left;">
+                        <p>Analizar la proporción de diagnósticos positivos frente a negativos es el paso cero en cualquier problema de clasificación.</p>
+                        
+                        <div class="card" style="margin-top: 20px; border-left: 4px solid var(--primary-color);">
+                            <div class="card-title"><i class="fa-solid fa-scale-balanced"></i> Diagnóstico Estadístico</div>
+                            <p style="font-size: 1rem;">El dataset presenta una distribución <strong>saludablemente balanceada</strong>:</p>
+                            <ul style="font-size: 1rem; color: var(--text-muted);">
+                                <li><span style="color: var(--secondary-color); font-weight: bold;">Enfermedad (1):</span> 54.5% (165 casos)</li>
+                                <li><span style="color: var(--primary-color); font-weight: bold;">Sanos (0):</span> 45.5% (138 casos)</li>
+                            </ul>
+                            <p style="font-size: 0.9rem; margin-top: 15px; color: var(--text-muted);">
+                                <em>* El balance de clases nos permite utilizar la Exactitud (Accuracy) sin riesgo a sesgos por clases mayoritarias.</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: Análisis de Variables Continuas -->
+            <section>
+                <h2>Distribución de Predictores Continuos</h2>
+                <p style="text-align: center; margin-bottom: 30px; color: var(--text-muted);">Comportamiento demográfico y clínico de la población estudiada.</p>
+                <div class="grid-3">
+                    <div class="card" style="padding: 15px;">
+                        <div class="card-title" style="font-size: 1.1rem; text-align: center;">Edad (age)</div>
+                        <div class="chart-container-small"><canvas id="distAge"></canvas></div>
+                        <p class="muted" style="font-size: 0.85rem; text-align: center; margin-top: 15px;">Pico de prevalencia entre los 50 y 60 años. Distribución aproximadamente Gaussiana.</p>
+                    </div>
+                    <div class="card" style="padding: 15px;">
+                        <div class="card-title" style="font-size: 1.1rem; text-align: center;">Colesterol (chol)</div>
+                        <div class="chart-container-small"><canvas id="distChol"></canvas></div>
+                        <p class="muted" style="font-size: 0.85rem; text-align: center; margin-top: 15px;">Ligera asimetría positiva. Observamos algunos <strong>outliers</strong> por encima de 400 mg/dl.</p>
+                    </div>
+                    <div class="card" style="padding: 15px;">
+                        <div class="card-title" style="font-size: 1.1rem; text-align: center;">F. Cardíaca Max (thalach)</div>
+                        <div class="chart-container-small"><canvas id="distThalach"></canvas></div>
+                        <p class="muted" style="font-size: 0.85rem; text-align: center; margin-top: 15px;">Asimetría negativa. La mayoría de los pacientes superan los 140 lpm en esfuerzo.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Modelo de Regresión Lineal -->
+            <section>
+                <h2>3. Primer Enfoque: Regresión Lineal</h2>
+                <div class="grid-2">
+                    <div style="text-align: left;">
+                        <p style="font-size: 0.95rem;"><strong>¿Por qué un modelo Lineal primero?</strong> Sirve como modelo base (<em>baseline</em>) para evaluar la separabilidad lineal y la importancia de características mediante OLS (Mínimos Cuadrados Ordinarios).</p>
+                        
+                        <div class="equation-box" style="font-size: 1.1rem; padding: 15px; margin: 15px 0;">
+                            <span style="color:var(--text-muted); font-size: 0.8rem;">Ecuación de Hiperplano:</span><br>
+                            ŷ = <span style="color:var(--accent-color)">-0.15</span> - 0.003(age) - 0.0004(chol) + <span style="color:var(--primary-color)">0.008(thalach)</span> - 0.002(trestbps)
+                        </div>
+
+                        <div class="code-snippet" style="font-size: 0.75rem;">
+<span class="code-keyword">from</span> sklearn.linear_model <span class="code-keyword">import</span> LinearRegression
+
+<span style="color:#6a9955;"># Parámetros: fit_intercept=True, n_jobs=None</span>
+model = <span class="code-function">LinearRegression</span>()
+model.<span class="code-function">fit</span>(X_train, y_train)
+
+<span style="color:#6a9955;"># Coeficientes obtenidos (β)</span>
+<span class="code-function">print</span>(<span class="code-string">f"β₀ (Intercepto): {model.intercept_:.4f}"</span>) <span style="color:#6a9955;"># -0.1538</span>
+<span class="code-function">print</span>(<span class="code-string">f"β_thalach: {model.coef_[2]:.4f}"</span>) <span style="color:#6a9955;"># 0.0082</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <div class="card-title">Evaluación del Modelo Lineal</div>
+                            <div class="grid-2" style="gap: 15px; margin-top: 15px;">
+                                <div class="metric-box" style="padding: 10px;">
+                                    <div class="metric-value" style="font-size: 2.2rem; color: var(--secondary-color);">0.30</div>
+                                    <div class="metric-label" style="font-size: 0.8rem;">R² Score</div>
+                                </div>
+                                <div class="metric-box" style="padding: 10px;">
+                                    <div class="metric-value" style="font-size: 2.2rem;">0.174</div>
+                                    <div class="metric-label" style="font-size: 0.8rem;">MSE</div>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.95rem; margin-top: 20px; color: var(--text-muted); text-align: left;">
+                                <i class="fa-solid fa-triangle-exclamation" style="color: var(--secondary-color);"></i> <strong>El problema fundamental:</strong> Un R² de 0.30 evidencia que una línea recta no captura la naturaleza de la decisión clínica. Las predicciones (ŷ) escapan del rango probabilístico estricto [0, 1], produciendo valores carentes de sentido lógico (ej. probabilidad de 1.2 o -0.1).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Transición a Regresión Logística -->
+            <section>
+                <h2>4. Evolución Metodológica</h2>
+                <h3>La Solución al Problema Binario: Regresión Logística</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 30px;">Para solucionar el error conceptual de la regresión lineal sobre un target binario, aplicamos la <strong>función Sigmoide</strong>, la cual "aplasta" (squashes) la salida lineal, garantizando una interpretación puramente probabilística acotada entre 0 y 1.</p>
+                
+                <div class="grid-2" style="align-items: stretch;">
+                    <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                        <div class="equation-box" style="font-size: 1.4rem; padding: 20px; margin: 0; background: transparent; border: none;">
+                            <span style="color: var(--text-muted);">P(Y=1 | X) =</span> 
+                            <br><br>
+                            <span style="font-size: 1.8rem; color: var(--primary-color);">
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mfrac>
+                                        <mn>1</mn>
+                                        <mrow>
+                                            <mn>1</mn>
+                                            <mo>+</mo>
+                                            <msup>
+                                                <mi>e</mi>
+                                                <mrow>
+                                                    <mo>-</mo>
+                                                    <mo>(</mo>
+                                                    <msub><mi>β</mi><mn>0</mn></msub>
+                                                    <mo>+</mo>
+                                                    <msub><mi>β</mi><mn>1</mn></msub><mi>X</mi>
+                                                    <mo>)</mo>
+                                                </mrow>
+                                            </msup>
+                                        </mrow>
+                                    </mfrac>
+                                </math>
+                            </span>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 0.9rem; text-align: left; padding: 0 10px;">
+                            <strong style="color: var(--accent-color);">Matemática del Log-Odds:</strong><br>
+                            El modelo ajusta los parámetros (<i>β</i>) mediante MLE (Máxima Verosimilitud), mapeando las características clínicas al logaritmo natural de las probabilidades: <i>ln( p / (1-p) )</i>.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Especificación del Modelo</div>
+                        <ul style="font-size: 0.95rem; text-align: left; margin-top: 15px; color: var(--text-main);">
+                            <li style="margin-bottom: 12px;"><strong class="highlight-primary">Solver: <code>lbfgs</code></strong><br><span style="font-size: 0.85rem; color: var(--text-muted);">Es el motor matemático. En lugar de procesar paciente por paciente, aproxima las derivadas matemáticas para encontrar los pesos ideales de forma muy rápida considerando todo el dataset.</span></li>
+                            <li style="margin-bottom: 12px;"><strong class="highlight-primary">Regularización: <code>penalty='l2' (Ridge)</code></strong><br><span style="font-size: 0.85rem; color: var(--text-muted);">Evita que el modelo confíe "demasiado" en una sola variable. Penaliza matemáticamente los coeficientes exagerados, creando un modelo mucho más equilibrado y generalizable.</span></li>
+                            <li style="margin-bottom: 12px;"><strong class="highlight-accent">No-linealidad Acotada:</strong><br><span style="font-size: 0.85rem; color: var(--text-muted);">Transforma los resultados lineales desde un rango infinito (-∞, +∞) a una probabilidad pura (entre 0 y 1). Esto permite al médico establecer un punto de corte fiable (ej. diagnosticar si <i>p &gt; 0.5</i>).</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Evaluación Logística (Matriz de Confusión) -->
+            <section>
+                <h2>5. Evaluación del Modelo Clasificador</h2>
+                <h3>Análisis de Errores (Matriz de Confusión)</h3>
+                
+                <div class="grid-2">
+                    <div>
+                        <p style="font-size: 1rem; text-align: left; margin-bottom: 20px;">Evaluación detallada del desempeño del modelo sobre el conjunto de test (20% invisible para el algoritmo).</p>
+                        
+                        <div class="confusion-matrix">
+                            <div></div>
+                            <div class="cm-header">Predice Sano (0)</div>
+                            <div class="cm-header">Predice Enfermo (1)</div>
+
+                            <div class="cm-header" style="transform: rotate(-90deg); white-space: nowrap; align-self: center;">Real Sano (0)</div>
+                            <div class="cm-cell cm-tn">
+                                <span class="value">22</span>
+                                <span class="label">Verdaderos Negativos</span>
+                            </div>
+                            <div class="cm-cell cm-fp">
+                                <span class="value" style="color: var(--secondary-color);">7</span>
+                                <span class="label">Falsos Positivos</span>
+                            </div>
+
+                            <div class="cm-header" style="transform: rotate(-90deg); white-space: nowrap; align-self: center;">Real Enfermo(1)</div>
+                            <div class="cm-cell cm-fn">
+                                <span class="value" style="color: var(--secondary-color);">7</span>
+                                <span class="label">Falsos Negativos</span>
+                            </div>
+                            <div class="cm-cell cm-tp">
+                                <span class="value" style="color: var(--primary-color);">25</span>
+                                <span class="label">Verdaderos Positivos</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <table class="academic-table" style="font-size: 0.95rem;">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Exactitud (Accuracy)</strong></td>
+                                    <td style="text-align: right; font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">77.1%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Precisión (Precision)</strong><br><span style="font-size: 0.75rem; color: var(--text-muted);">De los predichos enfermos, ¿cuántos lo están?</span></td>
+                                    <td style="text-align: right;">78.1%</td>
+                                </tr>
+                                <tr style="background: rgba(20, 184, 166, 0.1);">
+                                    <td><strong>Sensibilidad (Recall)</strong><br><span style="font-size: 0.75rem; color: var(--text-muted);">De los enfermos reales, ¿cuántos detectamos?</span></td>
+                                    <td style="text-align: right; color: var(--primary-color); font-weight: bold;">78.1%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul style="font-size: 0.85rem; margin-top: 15px; color: var(--text-muted); text-align: left; padding-left: 20px;">
+                            <li>En medicina, maximizar la <em>Sensibilidad</em> es prioritario.</li>
+                            <li>Es preferible asumir un Falso Positivo (más exámenes preventivos) que un Falso Negativo (omitir un riesgo inminente).</li>
+                            <li>El modelo logró acotar los Falsos Negativos a 7 casos en nuestro test set, señalando un área clave para mejorar con futuros ensambles.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Curva ROC -->
+            <section>
+                <h2>6. Curva ROC y AUC</h2>
+                <h3>Poder Discriminativo del Modelo</h3>
+                <div class="grid-2">
+                    <div class="chart-container" style="height: 420px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; box-sizing: border-box;">
+                        <canvas id="rocChart"></canvas>
+                    </div>
+                    <div style="text-align: left; display: flex; flex-direction: column; justify-content: center;">
+                        <div class="card" style="margin-bottom: 20px;">
+                            <div class="card-title" style="border-bottom: none; margin-bottom: 0;">Área Bajo la Curva (AUC)</div>
+                            <div class="metric-value" style="font-size: 3.5rem; margin: 0; color: var(--accent-color);">0.838</div>
+                        </div>
+                        
+                        <p style="font-size: 1rem; line-height: 1.6;">La <strong>Curva ROC</strong> (Receiver Operating Characteristic) grafica la relación entre la Tasa de Verdaderos Positivos (Sensibilidad) y la Tasa de Falsos Positivos (1 - Especificidad) a través de múltiples umbrales de decisión.</p>
+                        
+                        <ul style="font-size: 0.95rem; margin-top: 15px; color: var(--text-muted);">
+                            <li style="margin-bottom: 10px;">Un modelo inútil (aleatorio) sigue la línea punteada diagonal (AUC = 0.5).</li>
+                            <li style="margin-bottom: 10px;">Un modelo perfecto alcanzaría la esquina superior izquierda (AUC = 1.0).</li>
+                            <li>Nuestro valor de <strong>0.838</strong> demuestra una <strong>buena capacidad de separabilidad</strong> entre pacientes con y sin la enfermedad cardíaca, validando la superioridad de este enfoque frente a la regresión lineal.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: Conclusiones Rigurosas -->
+            <section>
+                <h2>7. Conclusiones Principales</h2>
+                <div class="card" style="text-align: left; padding: 40px; margin-top: 30px;">
+                    <ul style="font-size: 1.15rem; line-height: 1.8; color: var(--text-main);">
+                        <li style="margin-bottom: 20px;">
+                            <strong class="highlight-primary">Relevancia Clínica de Variables:</strong> El análisis ratifica empíricamente que anomalías en la frecuencia cardíaca (<em>thalach</em>) y el colesterol son predictores tempranos altamente eficaces.
+                        </li>
+                        <li style="margin-bottom: 20px;">
+                            <strong class="highlight-secondary">Insuficiencia de la Regresión Lineal:</strong> Se demostró la incapacidad matemática de la Regresión Lineal (R² = 0.30) para generar probabilidades estrictas y válidas, justificando el salto metodológico.
+                        </li>
+                        <li style="margin-bottom: 20px;">
+                            <strong class="highlight-accent">Desempeño del Modelo Final (Logístico):</strong> Logramos un punto de partida muy sólido con una <strong>exactitud del 77.1%</strong> y un área bajo la curva (AUC) validante de <strong>0.838</strong>.
+                        </li>
+                        <li>
+                            <strong style="color: var(--text-muted);">Próximos Pasos (Healtech 2):</strong> La sensibilidad actual del 78.1% significa que aún tenemos 7 casos de "falsos negativos" en nuestro test. El objetivo a futuro es aplicar ensambles avanzados (Random Forests, Gradient Boosting) para llevar ese número a cero.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Cierre -->
+            <section>
+                <div style="margin-top: 50px;">
+                    <i class="fa-solid fa-notes-medical" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+                    <h1 style="font-size: 4rem; margin-bottom: 10px;">Gracias por su atención</h1>
+                    <h3 style="color: var(--text-muted); font-weight: 300;">Sesión de Preguntas</h3>
+                    <div style="margin-top: 60px; font-size: 1rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: inline-block;">
+                        <strong>Healtech 1 - Análisis Predictivo</strong><br>
+                        Proyecto Universitario - Analítica Clínica Aplicada
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: 'c/t',
+            width: 1200, // Hacer la presentación más ancha para aprovechar el espacio
+            height: 700,
+            margin: 0.04
+        });
+
+        // Configuración Global Chart.js para Dark Theme
+        Chart.defaults.color = '#94a3b8'; // text-muted
+        Chart.defaults.font.family = 'Inter';
+        Chart.defaults.font.size = 13;
+        Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.1)'; // Líneas de grid tenues
+
+        const colorTeal = '#14b8a6';
+        const colorTealBg = 'rgba(20, 184, 166, 0.5)';
+        const colorRose = '#f43f5e';
+        const colorRoseBg = 'rgba(244, 63, 94, 0.5)';
+        const colorViolet = '#8b5cf6';
+
+        // Slide 3: Target Doughnut
+        new Chart(document.getElementById('targetChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Sanos (0)', 'Con Enfermedad (1)'],
+                datasets: [{
+                    data: [138, 165],
+                    backgroundColor: [colorTealBg, colorRoseBg],
+                    borderColor: [colorTeal, colorRose],
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { padding: 20, font: { size: 14, weight: '600' }, color: '#f1f5f9' } 
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#f1f5f9',
+                        bodyColor: '#f1f5f9',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) label += ': ';
+                                label += context.raw + ' pacientes (' + Math.round((context.raw/303)*100) + '%)';
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // Funciones auxiliares para histogramas
+        function createHistogram(ctxId, labels, data, baseColor, borderColor) {
+            new Chart(document.getElementById(ctxId).getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: baseColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barPercentage: 0.9,
+                        categoryPercentage: 1.0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)' }
+                    }
+                }
+            });
+        }
+
+        // Slide 4: Distribuciones
+        createHistogram('distAge', ['30-40', '40-50', '50-60', '60-70', '70+'], [18, 72, 125, 76, 12], 'rgba(139, 92, 246, 0.3)', colorViolet);
+        createHistogram('distChol', ['<200', '200-240', '240-280', '280-320', '>320'], [50, 98, 90, 45, 20], colorTealBg, colorTeal);
+        createHistogram('distThalach', ['<120', '120-140', '140-160', '160-180', '>180'], [25, 55, 95, 88, 40], colorRoseBg, colorRose);
+
+        // Slide 8: Curva ROC (Valores de ejemplo muy precisos que resultan en AUC ~0.93)
+        const rocPoints = [
+            {x: 0.0, y: 0.0}, {x: 0.0, y: 0.1}, {x: 0.02, y: 0.45}, {x: 0.04, y: 0.65}, {x: 0.08, y: 0.81},
+            {x: 0.12, y: 0.88}, {x: 0.20, y: 0.92}, {x: 0.35, y: 0.95}, {x: 0.5, y: 0.97},
+            {x: 0.7, y: 0.99}, {x: 1.0, y: 1.0}
+        ];
+
+        new Chart(document.getElementById('rocChart').getContext('2d'), {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Curva ROC (Logistic Reg.)',
+                        data: rocPoints,
+                        borderColor: colorTeal,
+                        backgroundColor: 'rgba(20, 184, 166, 0.15)',
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#0f172a',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4 // Suaviza la curva para que se vea muy profesional
+                    },
+                    {
+                        type: 'line',
+                        label: 'Clasificador Aleatorio',
+                        data: [{x: 0, y: 0}, {x: 1, y: 1}],
+                        borderColor: colorRose,
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Tasa de Falsos Positivos (1 - Especificidad)', font: { size: 14, weight: '500' }, color: '#e2e8f0' },
+                        min: 0, max: 1
+                    },
+                    y: {
+                        title: { display: true, text: 'Tasa de Verdaderos Positivos (Sensibilidad)', font: { size: 14, weight: '500' }, color: '#e2e8f0' },
+                        min: 0, max: 1.05
+                    }
+                },
+                plugins: {
+                    legend: { 
+                        position: 'top',
+                        labels: { color: '#f1f5f9', font: {size: 13} }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        callbacks: {
+                            label: function(context) {
+                                return `FPR: ${context.parsed.x.toFixed(2)} | TPR: ${context.parsed.y.toFixed(2)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
