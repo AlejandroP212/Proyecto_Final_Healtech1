@@ -1,0 +1,17 @@
+{
+  "tabla1_p": {
+    "Edad (años)": 3.672541004211365e-05,
+    "Presión arterial sistólica en reposo (mmHg)": 0.023459596107723604,
+    "Colesterol sérico total (mg/dL)": 0.04668917507430683,
+    "Frecuencia cardíaca máxima alcanzada (lpm)": 1.675290182913606e-13,
+    "Depresión del ST inducida por ejercicio (mm)": 1.5386103059956739e-12,
+    "Vasos mayores coloreados por fluoroscopia (n.º (0-3))": 2.7053762067321834e-17,
+    "Sexo masculino": 1.594533053365961e-06,
+    "Glucemia en ayunas > 120 mg/dL": 0.9564761351720438,
+    "Angina inducida por ejercicio": 3.8279543157806343e-13,
+    "Tipo de dolor torácico": 1.1782838465918115e-16,
+    "ECG en reposo": 0.005449727513624319,
+    "Pendiente del ST en el pico de ejercicio": 3.630107106911135e-10,
+    "Gammagrafía con talio": 1.2416728386228762e-18
+  }
+}

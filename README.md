@@ -1,169 +1,99 @@
-# Prediccion de Enfermedades Cardiacas - Healtech 1
+# Variables clínicas no invasivas y enfermedad coronaria angiográfica
 
-Proyecto final de **Healtech 1** orientado al analisis estadistico y al modelado predictivo para apoyar la deteccion temprana de enfermedad cardiaca a partir de variables clinicas.
+**HealthTech 1 y 2 · Pregrado en Ciencia de Datos aplicada a la Salud · Universidad Externado de Colombia**
+Angie Milena Tobar Aguirre · Alejandro Pardo Costo · Docente: Eliana Andrea González Artunduaga
 
-El repositorio integra el dataset trabajado, el notebook de analisis, la presentacion final y los guiones usados para comunicar los hallazgos. Tambien queda preparado como base para una futura redaccion en formato de paper investigativo.
+Estudio observacional analítico de corte transversal con datos secundarios: 303 pacientes remitidos a angiografía coronaria en la
+Cleveland Clinic Foundation (UCI Heart Disease). Responde a dos preguntas:
+- ¿Qué variables de consulta, del ECG de reposo y de la prueba de esfuerzo se asocian de forma independiente con la enfermedad coronaria?
+- ¿Qué tan bien la predice un modelo construido solo con ellas, frente a uno que añade estudios de imagen?
 
-## Equipo
+> El planteamiento completo (pregunta, hipótesis H0/H1, objetivos, población, variables, métodos, limitaciones y ética) está en
+> **[`docs/plan_analisis.md`](docs/plan_analisis.md)**. Los resultados actualizados están en **[`results/RESUMEN_RESULTADOS.md`](results/RESUMEN_RESULTADOS.md)**.
 
-- Santiago Palacios
-- Angie Tobar
-- Alejandro Pardo
+## Hallazgos principales
 
-## Objetivo
+| | RL 4 continuas (semestre 1) | **RL básica (no invasiva)** | RL extendida (+ imagen) | Árbol CART | Random Forest |
+|---|---|---|---|---|---|
+| AUC, validación cruzada 5 × 20 | 0,749 | **0,874** | 0,909 | 0,842 | 0,910 |
+| Pendiente de calibración | 0,93 | **0,91** | 0,84 | 0,26 | 1,59 |
 
-Construir y evaluar modelos predictivos capaces de clasificar pacientes como sanos o con presencia de enfermedad cardiaca usando informacion clinica estructurada. El proyecto compara un primer enfoque de **regresion lineal** como linea base con un modelo de **regresion logistica**, mas adecuado para una variable objetivo binaria.
+1. **Las variables no invasivas discriminan bien:** el AUC corregido por optimismo es 0,880. Los predictores independientes son el dolor torácico asintomático (OR 10,6), el sexo masculino (OR 7,5) y la depresión del ST (OR 1,8 por mm). La frecuencia cardíaca máxima es **protectora** (OR 0,82 por cada 10 lpm), aunque su significancia es limítrofe (p = 0,048; p = 0,051 con n = 303). El colesterol no se asocia de forma independiente.
+2. **La imagen aporta, pero poco:** la fluoroscopia y la gammagrafía con talio suben el AUC en 0,035 (IC 95 % 0,008–0,062).
+3. **La regresión logística supera al árbol de decisión** (ΔAUC 0,067; p = 0,004) e iguala al Random Forest, con mejor calibración.
+4. **La base de Kaggle usada en el semestre 1 tiene la etiqueta invertida.** Al corregirlo se invierte la dirección de varios efectos ([`data/raw/README.md`](data/raw/README.md)).
 
-## Dataset
+## Estructura
 
-El archivo [`heart_disease.csv`](heart_disease.csv) contiene 303 registros de pacientes y 14 variables clinicas. La variable objetivo es `target`:
-
-- `0`: ausencia de enfermedad cardiaca.
-- `1`: presencia de enfermedad cardiaca.
-
-Resumen del dataset usado en el notebook:
-
-- Filas: 303 pacientes.
-- Columnas: 14 variables.
-- Valores nulos: 0.
-- Distribucion de `target`: 138 pacientes sanos (45.54%) y 165 pacientes con enfermedad (54.46%).
-
-### Diccionario de variables
-
-| Variable | Descripcion |
-| --- | --- |
-| `age` | Edad del paciente. |
-| `sex` | Sexo codificado numericamente. |
-| `cp` | Tipo de dolor de pecho. |
-| `trestbps` | Presion arterial en reposo. |
-| `chol` | Colesterol serico. |
-| `fbs` | Azucar en sangre en ayunas mayor a 120 mg/dl. |
-| `restecg` | Resultados electrocardiograficos en reposo. |
-| `thalach` | Frecuencia cardiaca maxima alcanzada. |
-| `exang` | Angina inducida por ejercicio. |
-| `oldpeak` | Depresion del segmento ST inducida por ejercicio. |
-| `slope` | Pendiente del segmento ST en ejercicio. |
-| `ca` | Numero de vasos principales observados por fluoroscopia. |
-| `thal` | Resultado de prueba thalassemia codificado. |
-| `target` | Diagnostico binario de enfermedad cardiaca. |
-
-## Metodologia
-
-El flujo tecnico principal esta implementado en [`Predicción_de_Enfermedades_Cardíacas.ipynb`](Predicción_de_Enfermedades_Cardíacas.ipynb):
-
-1. Carga del dataset desde `heart_disease.csv`.
-2. Revision de estructura, tipos de datos y valores nulos.
-3. Analisis exploratorio visual de la variable objetivo y predictores clinicos.
-4. Revision de distribuciones, correlaciones y relaciones entre variables.
-5. Seleccion inicial de variables continuas: `age`, `chol`, `thalach` y `trestbps`.
-6. Division de datos en entrenamiento y prueba con proporcion 80/20 (`random_state=42`).
-7. Entrenamiento de una regresion lineal como baseline.
-8. Entrenamiento de una regresion logistica como clasificador formal.
-9. Evaluacion con metricas de clasificacion, matriz de confusion y curva ROC.
-
-## Resultados principales
-
-### Regresion lineal
-
-La regresion lineal se uso como modelo exploratorio inicial. Aunque ayuda a entender relaciones aproximadas entre variables, no es el enfoque ideal para un diagnostico binario porque puede producir valores continuos fuera de una interpretacion estricta de clase.
-
-Resultados observados:
-
-- `R2`: 0.3002.
-- `MSE`: 0.1745.
-
-### Regresion logistica
-
-- Matriz de confusion: `[[22, 7], [7, 25]]`.
-
-En contexto clinico, la sensibilidad es especialmente importante porque los falsos negativos representan pacientes con enfermedad que el modelo clasificaria como sanos. En esta ejecucion hubo 7 falsos negativos en el conjunto de prueba.
-
-Adicionalmente, se realizo un analisis de **Significancia Estadistica (p-values)** usando `statsmodels`. Se comprobo que variables como el tipo de dolor de pecho ($p \approx 0.000$) y la frecuencia cardiaca maxima ($p = 0.026$) aportan informacion estadisticamente significativa para el diagnostico, superando la barrera del 5% ($p < 0.05$). Esto permite rechazar la hipotesis nula de que dichas variables no tienen efecto, validando su gran peso predictivo.
-
-## Estructura del repositorio
-
-| Archivo o carpeta | Proposito |
-| --- | --- |
-| [`Predicción_de_Enfermedades_Cardíacas.ipynb`](Predicción_de_Enfermedades_Cardíacas.ipynb) | Notebook principal con EDA, preprocesamiento, entrenamiento y evaluacion de modelos. |
-| [`heart_disease.csv`](heart_disease.csv) | Dataset clinico usado para el analisis y modelado. |
-| [`presentacion_healtech.html`](presentacion_healtech.html) | Presentacion web en formato Reveal.js con los hallazgos finales del proyecto. |
-| [`Guion_Presentacion_Healtech.md`](Guion_Presentacion_Healtech.md) | Guion final de exposicion, alineado con la narrativa de regresion logistica y evaluacion clinica. |
-| [`Guion_Presentacion_Heart_Disease.docx`](Guion_Presentacion_Heart_Disease.docx) | Guion en Word de una version previa centrada en regresion lineal. Se conserva como evidencia del proceso iterativo. |
-| [`requirements.txt`](requirements.txt) | Dependencias principales para ejecutar el notebook. |
-| [`.gitignore`](.gitignore) | Reglas para excluir entorno virtual, caches y archivos locales del repositorio. |
-| [`.vscode/settings.json`](.vscode/settings.json) | Configuracion local del interprete de VS Code. No es necesaria para reproducir el proyecto. |
-
-La carpeta `.venv/` corresponde al entorno virtual local y no debe subirse al repositorio.
-
-## Requisitos
-
-El proyecto fue trabajado con Python 3.12. Para reproducirlo se recomienda crear un entorno virtual e instalar las dependencias:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+```text
+├── data/
+│   ├── raw/                 # Datos originales (no se modifican) + procedencia y auditoría
+│   └── processed/           # Base depurada (generada)
+├── notebooks/               # Análisis completo, ejecutable en orden (salidas guardadas)
+│   ├── 00_configuracion.ipynb      # rutas, semilla, diccionario de variables, predictores, paleta, utilidades
+│   ├── 01_datos_y_auditoria.ipynb  # SHA-256, depuración, control de calidad, auditoría Kaggle vs. UCI
+│   ├── 02_descriptivo.ipynb        # Tabla 1 (Shapiro-Wilk → prueba adecuada), figuras 3–5
+│   ├── 03_asociacion.ipynb         # OR crudos/ajustados, supuestos, H-1, tamaño de muestra (Riley)
+│   ├── 04_modelos_predictivos.ipynb# CV 5×20, bootstrap, DeLong, Nadeau-Bengio, calibración, H-2 a H-4
+│   └── 05_resumen_resultados.ipynb # integra results/resultados.json y RESUMEN_RESULTADOS.md
+├── results/
+│   ├── figures/             # fig01–fig11 (PNG, 300 dpi)
+│   ├── tables/              # tabla1–tabla4 (CSV + LaTeX) y detalle de OR
+│   ├── json/                # resultados parciales de cada notebook
+│   ├── resultados.json      # todas las cifras, en formato legible por máquina
+│   └── RESUMEN_RESULTADOS.md
+├── docs/
+│   ├── plan_analisis.md     # protocolo: fuente única de verdad del proyecto
+│   ├── diccionario_variables.md  # generado automáticamente
+│   └── lineamientos/        # rúbrica de evaluación y guía de protocolo del curso
+├── paper/                   # (en construcción) artículo en LaTeX según el protocolo; ya contiene la plantilla de estilo
+├── presentacion/            # (en construcción) presentación final de 30–45 min
+├── archivo/semestre_2_presentaciones_previas/  # presentaciones de avance del semestre 2 (base de diseño)
+└── Makefile                 # setup · all · verify · clean
 ```
 
-## Como ejecutar el proyecto
-
-1. Clonar el repositorio:
+## Cómo reproducir
 
 ```bash
 git clone https://github.com/AlejandroP212/Proyecto_Final_Healtech1.git
 cd Proyecto_Final_Healtech1
+make setup      # (re)crea .venv desde cero e instala las versiones exactas de requirements.txt
+make all        # unos 4 minutos: ejecuta los notebooks 01–05 en orden y regenera results/ y docs/diccionario_variables.md
+make verify     # opcional: vuelve a ejecutar y comprueba que los resultados sean idénticos
 ```
 
-2. Crear y activar el entorno virtual:
+Sin `make`: abrir los notebooks en Jupyter (`jupyter lab notebooks/`) y ejecutarlos en orden, del 01 al 05. Cada uno carga `00_configuracion.ipynb` con `%run`.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+Requisitos: Python 3.12 y `make`. El Makefile antepone `.venv/bin` al `PATH`, de modo que el kernel de Jupyter usa siempre el
+entorno del proyecto y no el Python del sistema.
 
-3. Instalar dependencias:
+**Reproducibilidad verificada.** `make verify` se ejecutó tras recrear el entorno desde cero y produjo un `resultados.json` idéntico.
 
-```bash
-pip install -r requirements.txt
-```
+Reglas del proyecto:
+- Ninguna tabla, figura o cifra se edita a mano. Si algo cambia, se cambia el código y se vuelve a ejecutar.
+- La semilla está fijada (2026) y el archivo crudo se verifica por SHA-256.
 
-4. Abrir el notebook:
+## Figuras
 
-```bash
-jupyter notebook "Predicción_de_Enfermedades_Cardíacas.ipynb"
-```
+| # | Contenido | # | Contenido |
+|---|---|---|---|
+| 01 | Auditoría Kaggle vs. UCI (inversión de etiqueta) | 07 | Curvas ROC fuera de muestra |
+| 02 | Diagrama de flujo de la muestra | 08 | Calibración |
+| 03 | Variables cuantitativas por diagnóstico | 09 | Árbol de decisión final |
+| 04 | Proporción de EC por variable cualitativa | 10 | Distribución del AUC en 100 particiones |
+| 05 | Correlaciones de Spearman | 11 | Compromiso sensibilidad–especificidad |
+| 06 | Forest plot de OR crudos y ajustados | | |
 
-5. Ejecutar las celdas en orden para reproducir el analisis y las metricas.
+## Historial
 
-## Presentacion
+- **Semestre 1 (HealthTech 1):** análisis con la versión de Kaggle de la base (regresión lineal y logística con 4 variables). Ese material se
+  retiró del árbol de trabajo porque sus conclusiones dependen de la etiqueta invertida. Sigue disponible en el historial de git
+  (commit `f68b048`). Los cambios metodológicos están documentados en `docs/plan_analisis.md` §12.
+- **Semestre 2 (HealthTech 2):** reanálisis completo con la base oficial de UCI, el protocolo de investigación y validación interna rigurosa.
 
-La presentacion puede abrirse directamente en un navegador desde [`presentacion_healtech.html`](presentacion_healtech.html). Usa Reveal.js, Chart.js y Font Awesome desde CDN, por lo que algunas visualizaciones o estilos dependen de conexion a internet.
+## Datos y citación
 
-## Notas para el futuro paper
+UCI Machine Learning Repository, *Heart Disease* (Cleveland). DOI [10.24432/C52P4X](https://doi.org/10.24432/C52P4X). Licencia CC BY 4.0.
+Investigador principal en Cleveland: Robert Detrano, M.D., Ph.D. Detrano R, *et al.* Am J Cardiol. 1989;64(5):304-10.
 
-Este repositorio ya contiene los elementos base para redactar un documento investigativo:
-
-- Planteamiento del problema: deteccion temprana de enfermedad cardiaca.
-- Descripcion del dataset y sus variables.
-- Exploracion estadistica inicial.
-- Justificacion metodologica del cambio de regresion lineal a regresion logistica.
-- Evaluacion del clasificador con metricas clinicamente interpretables.
-- Discusion sobre falsos negativos, sensibilidad y trabajo futuro.
-
-Lineas recomendadas para una siguiente fase:
-
-- Comparar la regresion logistica contra Random Forest, Gradient Boosting y SVM.
-- Evaluar validacion cruzada para reducir dependencia de una unica particion train/test.
-- Probar escalamiento de variables y seleccion de caracteristicas.
-- Reportar intervalos de confianza o estabilidad de metricas.
-- Enfocar la discusion clinica en sensibilidad, especificidad y costo de falsos negativos.
-
-## Estado del repositorio
-
-Repositorio remoto objetivo:
-
-```text
-https://github.com/AlejandroP212/Proyecto_Final_Healtech1
-```
-
-Este README documenta el estado actual del proyecto y deja el repositorio listo para versionamiento en GitHub.
+*Proyecto académico. El modelo no está validado externamente y no debe usarse para decisiones clínicas.*

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factores de Riesgo Cardiovascular en la Población</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <!-- Google Fonts: Roboto Slab for Headings, Inter for Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Paleta Académica Moderna y Oscura (Profunda y Elegante) */
+        :root {
+            --bg-color: #0f172a; /* Slate 900 base */
+            --bg-gradient: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            --text-main: #f1f5f9; /* Slate 100 */
+            --text-muted: #94a3b8; /* Slate 400 */
+            --primary-color: #14b8a6; /* Teal 500 (Salud, frescura) */
+            --secondary-color: #f43f5e; /* Rose 500 (Énfasis suave) */
+            --accent-color: #8b5cf6; /* Violeta para detalles analíticos */
+            --border-color: rgba(148, 163, 184, 0.2);
+            --card-bg: rgba(30, 41, 59, 0.7); /* Slate 800 con transparencia */
+            --card-blur: blur(12px);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Agregar un patrón sutil de puntos al fondo para quitar lo "plano" */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .reveal {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+        }
+
+        /* Tipografía Académica */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Roboto Slab', serif;
+            color: var(--text-main);
+            text-transform: none;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .reveal h1 { font-size: 2.8rem; line-height: 1.2; }
+        .reveal h2 { 
+            font-size: 2.2rem; 
+            border-bottom: 2px solid var(--primary-color); 
+            padding-bottom: 10px; 
+            display: inline-block;
+            color: var(--primary-color);
+        }
+        .reveal h3 { font-size: 1.6rem; color: #e2e8f0; }
+        .reveal p, .reveal li { font-size: 1.15rem; line-height: 1.6; color: var(--text-main); }
+        .reveal .muted { color: var(--text-muted); font-size: 0.95rem; }
+
+        .highlight-primary { color: var(--primary-color); font-weight: 600; }
+        .highlight-secondary { color: var(--secondary-color); font-weight: 600; }
+        .highlight-accent { color: var(--accent-color); font-weight: 600; }
+
+        /* Contenedores y Tarjetas con estilo Glassmorphism refinado */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Roboto Slab', serif;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Tablas de Rigor Técnico */
+        .academic-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+            margin-top: 20px;
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .academic-table th, .academic-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .academic-table th {
+            background-color: rgba(20, 184, 166, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .academic-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Ecuaciones y Fórmulas */
+        .equation-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* Fragmento de Código Simulando el Entorno Real */
+        .code-snippet {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            text-align: left;
+            margin-top: 15px;
+            border: 1px solid #333;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            overflow-x: auto;
+        }
+        
+        .code-keyword { color: #569cd6; }
+        .code-function { color: #dcdcaa; }
+        .code-string { color: #ce9178; }
+
+        /* KPIs / Métricas */
+        .metric-box {
+            text-align: center;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            border-top: 4px solid var(--primary-color);
+            backdrop-filter: var(--card-blur);
+        }
+
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 10px 0;
+            text-shadow: 0 2px 10px rgba(20, 184, 166, 0.3);
+        }
+
+        .metric-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Matriz de Confusión Estilizada */
+        .confusion-matrix {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            grid-template-rows: auto 1fr 1fr;
+            gap: 5px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .cm-header {
+            font-weight: bold;
+            color: var(--text-muted);
+            text-align: center;
+            align-self: center;
+            font-size: 0.9rem;
+        }
+
+        .cm-cell {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cm-cell .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .cm-cell .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .cm-tp { background: rgba(20, 184, 166, 0.2); border-color: var(--primary-color); }
+        .cm-tn { background: rgba(20, 184, 166, 0.1); }
+        .cm-fp { background: rgba(244, 63, 94, 0.15); border-color: var(--secondary-color); }
+        .cm-fn { background: rgba(244, 63, 94, 0.2); border-color: var(--secondary-color); }
+
+        /* Gráficos Contenedor */
+        .chart-container {
+            position: relative;
+            height: 420px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .chart-container-small {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+
+
+
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Portada -->
+            <section>
+                <div style="margin-bottom: 25px;">
+                    <i class="fa-solid fa-heart-circle-check" style="font-size: 4.5rem; color: var(--primary-color); text-shadow: 0 0 30px rgba(20, 184, 166, 0.5);"></i>
+                </div>
+                <h3 class="muted" style="font-weight:400; margin-bottom: 6px;">Taller 3 · Análisis de una Base de Datos Pública</h3>
+                <h1>Enfermedad Cardíaca Coronaria</h1>
+                <h3 style="color: var(--text-muted); font-weight: 400; margin-top: 6px;">
+                    Base de datos: Heart Disease (Cleveland Clinic Foundation) · UCI Machine Learning Repository
+                </h3>
+                <div style="margin-top: 40px; text-align: center; background: rgba(0,0,0,0.2); padding: 18px; border-radius: 12px; display: inline-block;">
+                    <p style="font-weight: 600; color: var(--primary-color); margin-bottom: 8px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 2px;">Equipo</p>
+                    <p style="font-size: 1.05rem; margin: 0;">Alejandro Pardo &amp; Angie Tobar</p>
+                    <p class="muted" style="margin-top: 8px; font-size: 0.85rem;">
+                        <i class="fa-solid fa-graduation-cap"></i> HealthTech 1 · Universidad Externado de Colombia
+                    </p>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Base seleccionada -->
+            <section>
+                <h2>1. Base Seleccionada</h2>
+                <div class="grid-2" style="margin-top:20px;">
+                    <table class="academic-table" style="font-size:0.9rem;">
+                        <tbody>
+                            <tr><td><strong>Nombre</strong></td><td>Heart Disease Data Set (subconjunto Cleveland)</td></tr>
+                            <tr><td><strong>Repositorio</strong></td><td>UCI Machine Learning Repository</td></tr>
+                            <tr><td><strong>Tipo</strong></td><td>A. Solo datos clínicos</td></tr>
+                            <tr><td><strong>DOI</strong></td><td>10.24432/C52P4X</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="card" style="text-align:left;">
+                        <div class="card-title"><i class="fa-solid fa-link"></i> Enlace oficial</div>
+                        <p style="font-size:0.85rem; word-break:break-all;">https://archive.ics.uci.edu/dataset/45/heart+disease</p>
+                        <p class="muted" style="font-size:0.8rem;">Licencia Creative Commons Attribution 4.0 (CC BY 4.0)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Procedencia -->
+            <section>
+                <h2>2. Procedencia de la Base</h2>
+                <div class="grid-2" style="margin-top:15px;">
+                    <div class="card" style="text-align:left;">
+                        <div class="card-title" style="font-size:1rem;"><i class="fa-solid fa-server"></i> Plataforma</div>
+                        <p style="font-size:0.82rem;">UCI ML Repository, creado en 1987 por David Aha en UC Irvine; mantenido por su Dept. de Ciencias de la Información y Computación, con apoyo de la National Science Foundation.</p>
+                    </div>
+                    <div class="card" style="text-align:left;">
+                        <div class="card-title" style="font-size:1rem;"><i class="fa-solid fa-hospital"></i> Instituciones de origen</div>
+                        <p style="font-size:0.82rem;">4 centros: Hungarian Institute of Cardiology (Budapest), University Hospital Zurich, University Hospital Basel, y V.A. Medical Center Long Beach / <strong>Cleveland Clinic Foundation</strong> (EE.UU.) — usamos este último subconjunto.</p>
+                    </div>
+                    <div class="card" style="text-align:left;">
+                        <div class="card-title" style="font-size:1rem;"><i class="fa-solid fa-bullseye"></i> Objetivo original</div>
+                        <p style="font-size:0.82rem;">Desarrollar y validar un algoritmo de probabilidad para el diagnóstico de enfermedad coronaria (Detrano et al., 1989).</p>
+                    </div>
+                    <div class="card" style="text-align:left;">
+                        <div class="card-title" style="font-size:1rem;"><i class="fa-solid fa-calendar"></i> Fecha y construcción</div>
+                        <p style="font-size:0.82rem;">Datos recolectados en 1988. Base original con 76 atributos; los estudios de ML usan un subconjunto estándar de 14. <code>target</code> pasó de escala 0-4 a binaria.</p>
+                    </div>
+                </div>
+                <p class="muted" style="text-align:center; margin-top:15px;">Acceso: pública, gratuita, sin cuenta, CC BY 4.0 — cita obligatoria a los investigadores originales.</p>
+            </section>
+
+            <!-- SLIDE 4: Población y muestra -->
+            <section>
+                <h2>3. Población y Muestra</h2>
+                <div class="grid-3" style="margin-top:15px;">
+                    <div class="metric-box"><div class="metric-value">303</div><div class="metric-label">Pacientes</div></div>
+                    <div class="metric-box"><div class="metric-value">29-77</div><div class="metric-label">Rango de edad</div></div>
+                    <div class="metric-box"><div class="metric-value">68.3%/31.7%</div><div class="metric-label">Hombres/Mujeres</div></div>
+                </div>
+                <div class="card" style="text-align:left; margin-top:18px;">
+                    <p style="font-size:0.88rem;"><strong>Selección:</strong> retrospectiva, pacientes remitidos a angiografía coronaria en Cleveland Clinic (Ohio, EE.UU.) por sospecha clínica. <strong>Inclusión:</strong> registros con las 14 variables completas (por eso Cleveland es el subconjunto estándar, con menos datos faltantes). <strong>Representatividad:</strong> refleja población clínica de EE.UU. a finales de los 80 — <span class="highlight-secondary">no es generalizable a Colombia</span> por contexto, época y sistema de salud distintos. Predominancia masculina (68.3%) es un sesgo a considerar.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Variables -->
+            <section>
+                <h2>4. Variables</h2>
+                <table class="academic-table" style="font-size:0.72rem; margin-top:10px;">
+                    <thead><tr><th>Variable</th><th>Naturaleza</th><th>Escala</th><th>Función</th></tr></thead>
+                    <tbody>
+                        <tr><td>age, trestbps, chol, thalach, oldpeak, ca</td><td>Cuantitativa</td><td>Razón</td><td>Independiente</td></tr>
+                        <tr><td>sex, cp, fbs, restecg, exang, thal</td><td>Cualitativa</td><td>Nominal</td><td>Independiente</td></tr>
+                        <tr><td>slope</td><td>Cualitativa</td><td>Ordinal</td><td>Independiente</td></tr>
+                        <tr><td>target</td><td>Cualitativa</td><td>Nominal</td><td class="highlight-primary">Dependiente (desenlace)</td></tr>
+                    </tbody>
+                </table>
+                <p class="muted" style="margin-top:12px; text-align:center;">No hay variables de tratamiento ni de seguimiento — es una base <strong>diagnóstica transversal</strong>, no de manejo terapéutico ni longitudinal.</p>
+            </section>
+
+            <!-- SLIDE 6: Reseña de la enfermedad -->
+            <section>
+                <h2>5. Reseña: Enfermedad Cardíaca Coronaria</h2>
+                <div class="grid-2" style="margin-top:12px;">
+                    <div style="text-align:left;">
+                        <p style="font-size:0.85rem;"><strong>Definición:</strong> estrechamiento u obstrucción de las arterias coronarias por placa aterosclerótica, que reduce el flujo sanguíneo al miocardio.</p>
+                        <p style="font-size:0.85rem;"><strong>Tipos:</strong> angina estable, angina inestable, infarto agudo de miocardio, isquemia silente.</p>
+                        <p style="font-size:0.85rem;"><strong>Factores de riesgo:</strong> edad, sexo masculino, colesterol alto, hipertensión, diabetes, tabaquismo, sedentarismo, obesidad, antecedentes familiares.</p>
+                    </div>
+                    <div style="text-align:left;">
+                        <p style="font-size:0.85rem;"><strong>Síntomas:</strong> dolor/opresión torácica, disnea, fatiga, palpitaciones — a veces asintomática.</p>
+                        <p style="font-size:0.85rem;"><strong>Diagnóstico:</strong> ECG, prueba de esfuerzo, angiografía coronaria (estándar de oro), biomarcadores (troponina).</p>
+                        <p style="font-size:0.85rem;"><strong>Tratamiento y complicaciones:</strong> estatinas, antihipertensivos, angioplastia/stent, bypass; complicaciones: infarto, insuficiencia cardíaca, arritmias, muerte súbita.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Epidemiologia -->
+            <section>
+                <h2>6. Epidemiología</h2>
+                <div class="grid-3" style="margin-top:12px;">
+                    <div class="metric-box"><div class="metric-value">240M</div><div class="metric-label">Personas con enfermedad isquémica cardíaca, 2023 (IHME)</div></div>
+                    <div class="metric-box" style="border-top-color: var(--secondary-color);"><div class="metric-value">19.2M</div><div class="metric-label">Muertes por ECV en 2023 (1 de cada 3 muertes globales)</div></div>
+                    <div class="metric-box" style="border-top-color: var(--accent-color);"><div class="metric-value">315M</div><div class="metric-label">Casos prevalentes de enf. coronaria, 2022 (JACC)</div></div>
+                </div>
+                <div class="card" style="text-align:left; margin-top:18px;">
+                    <p style="font-size:0.85rem;"><strong>Regional:</strong> Europa Central/Oriental y Asia Central tienen la mayor prevalencia (8,019/100,000); Sur de Asia la menor (2,393/100,000). En Colombia, las 4 ECV más frecuentes afectan a <strong>5.6 millones de personas (17% de adultos)</strong> (Deloitte, 2015). <strong>GLOBOCAN/IARC no aplica</strong>: cubre solo cáncer, no enfermedad coronaria.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Costos -->
+            <section>
+                <h2>7. Costos de la Enfermedad</h2>
+                <table class="academic-table" style="font-size:0.82rem; margin-top:10px;">
+                    <thead><tr><th>Comorbilidad previa</th><th>Costo promedio evento coronario (Colombia, COP)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Dislipidemia</td><td>$17.040.336</td></tr>
+                        <tr><td>Hipertensión arterial</td><td>$22.075.708</td></tr>
+                        <tr><td>Diabetes</td><td>$28.825.711</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.85rem; margin-top:15px;"><strong>Comparación internacional:</strong> en España, el costo medio por síndrome coronario agudo fue de €14,069 (incluye pérdida de productividad, hospitalización y atención primaria/especializada). El costo cae más del 80% después de la fase aguda — <strong>la hospitalización inicial concentra el mayor gasto.</strong> El sistema de salud (EPS/IPS) asume la mayor parte del costo directo en Colombia.</p>
+            </section>
+
+            <!-- SLIDE 9: Retos -->
+            <section>
+                <h2>8. Retos y Oportunidades</h2>
+                <div class="grid-2" style="margin-top:15px;">
+                    <div class="card" style="text-align:left; border-top:4px solid var(--secondary-color);">
+                        <div class="card-title" style="color:var(--secondary-color);">Retos</div>
+                        <ul style="font-size:0.85rem;">
+                            <li>Diagnóstico tardío, especialmente en síntomas atípicos.</li>
+                            <li>Alta recurrencia tras el primer evento.</li>
+                            <li>Sigue siendo la principal causa de muerte mundial.</li>
+                            <li>Desigualdad de acceso entre regiones.</li>
+                            <li>Bases públicas antiguas (1988) no reflejan la práctica actual.</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="text-align:left; border-top:4px solid var(--primary-color);">
+                        <div class="card-title">¿Qué podría ayudar HealthTech / Ciencia de Datos?</div>
+                        <p style="font-size:0.85rem;">Predicción temprana de riesgo a partir de variables clínicas de bajo costo, apoyo a la decisión clínica y priorización de pacientes para angiografía — justificado porque nuestras variables ya muestran asociación estadística con el desenlace (Talleres 1 y 2).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Posibilidades de modelacion -->
+            <section>
+                <h2>9. Posibilidades de Modelación</h2>
+                <div class="card" style="text-align:left; margin-top:15px;">
+                    <p style="font-size:0.88rem;"><strong>Sin tiempo de seguimiento</strong> → no aplica Kaplan-Meier ni Cox (adaptado a regresión logística en el Taller 2). <strong>Sin imágenes</strong> → no aplica extracción de características de imagen.</p>
+                </div>
+                <div class="card" style="text-align:left; margin-top:15px; border-left:4px solid var(--primary-color);">
+                    <p style="font-size:0.88rem;"><strong>Lo que sí se ha hecho:</strong> regresión logística (Healtech 1), análisis de variables de riesgo por rangos con OR e IC95% (Taller 2), y árbol de decisión con umbrales óptimos vía Gini/CART.</p>
+                </div>
+                <p style="text-align:center; margin-top:18px; font-style:italic;">Pregunta de salud: ¿qué variables clínicas y de prueba de esfuerzo predicen la presencia de enfermedad coronaria confirmada por angiografía?</p>
+            </section>
+
+            <!-- SLIDE 11: Caracteristicas importantes -->
+            <section>
+                <h2>10. Características Potencialmente Importantes</h2>
+                <div class="grid-2" style="margin-top:15px;">
+                    <table class="academic-table" style="font-size:0.8rem;">
+                        <tbody>
+                            <tr><td><strong>Clínicas</strong></td><td>age, sex</td></tr>
+                            <tr><td><strong>Laboratorio</strong></td><td>chol, fbs</td></tr>
+                            <tr><td><strong>Prueba de esfuerzo</strong></td><td>thalach, oldpeak, exang, slope</td></tr>
+                            <tr><td><strong>Angiográficas</strong></td><td>ca, thal</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="card" style="text-align:left;">
+                        <p style="font-size:0.85rem;">Todas cuentan con respaldo previo en la literatura como factores de riesgo o marcadores diagnósticos de enfermedad coronaria — ya verificado empíricamente en los Talleres 1 y 2 de este proyecto.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: Referencias -->
+            <section>
+                <h2>11. Referencias</h2>
+                <div class="ref-box" style="text-align:left; font-size:0.78rem;">
+                    Detrano, R. et al. (1989). International application of a new probability algorithm for the diagnosis of coronary artery disease. <em>American Journal of Cardiology</em>, 64(5), 304-310.<br><br>
+                    UCI Machine Learning Repository. Heart Disease [Dataset]. https://doi.org/10.24432/C52P4X<br><br>
+                    Institute for Health Metrics and Evaluation (2025). Report: cardiovascular diseases caused 1 in 3 global deaths in 2023.<br><br>
+                    Stark, B., Johnson, C., Roth, G. (2024). Global prevalence of coronary artery disease. <em>JACC</em>, 83(13_Suppl), 2320.<br><br>
+                    Revista Colombiana de Cardiología (2018). Estimación de los costos directos de los eventos coronarios en Colombia.<br><br>
+                    Semana / Deloitte (2015). Costo de las enfermedades del corazón en Colombia.
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: 'c/t',
+            width: 1200, // Hacer la presentación más ancha para aprovechar el espacio
+            height: 700,
+            margin: 0.04
+        });
+
+        // Configuración Global Chart.js para Dark Theme
+        Chart.defaults.color = '#94a3b8'; // text-muted
+        Chart.defaults.font.family = 'Inter';
+        Chart.defaults.font.size = 13;
+        Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.1)'; // Líneas de grid tenues
+
+        const colorTeal = '#14b8a6';
+        const colorTealBg = 'rgba(20, 184, 166, 0.5)';
+        const colorRose = '#f43f5e';
+        const colorRoseBg = 'rgba(244, 63, 94, 0.5)';
+        const colorViolet = '#8b5cf6';
+
+        // Slide 3: Target Doughnut
+        new Chart(document.getElementById('targetChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Sanos (0)', 'Con Enfermedad (1)'],
+                datasets: [{
+                    data: [138, 165],
+                    backgroundColor: [colorTealBg, colorRoseBg],
+                    borderColor: [colorTeal, colorRose],
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { padding: 20, font: { size: 14, weight: '600' }, color: '#f1f5f9' } 
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#f1f5f9',
+                        bodyColor: '#f1f5f9',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) label += ': ';
+                                label += context.raw + ' pacientes (' + Math.round((context.raw/303)*100) + '%)';
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // Funciones auxiliares para histogramas
+        function createHistogram(ctxId, labels, data, baseColor, borderColor) {
+            new Chart(document.getElementById(ctxId).getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: baseColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barPercentage: 0.9,
+                        categoryPercentage: 1.0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)' }
+                    }
+                }
+            });
+        }
+
+        // Slide 4: Distribuciones
+        createHistogram('distAge', ['30-40', '40-50', '50-60', '60-70', '70+'], [18, 72, 125, 76, 12], 'rgba(139, 92, 246, 0.3)', colorViolet);
+        createHistogram('distChol', ['<200', '200-240', '240-280', '280-320', '>320'], [50, 98, 90, 45, 20], colorTealBg, colorTeal);
+        createHistogram('distThalach', ['<120', '120-140', '140-160', '160-180', '>180'], [25, 55, 95, 88, 40], colorRoseBg, colorRose);
+
+        // Slide 8: Curva ROC (Valores de ejemplo muy precisos que resultan en AUC ~0.93)
+        const rocPoints = [
+            {x: 0.0, y: 0.0}, {x: 0.0, y: 0.1}, {x: 0.02, y: 0.45}, {x: 0.04, y: 0.65}, {x: 0.08, y: 0.81},
+            {x: 0.12, y: 0.88}, {x: 0.20, y: 0.92}, {x: 0.35, y: 0.95}, {x: 0.5, y: 0.97},
+            {x: 0.7, y: 0.99}, {x: 1.0, y: 1.0}
+        ];
+
+        new Chart(document.getElementById('rocChart').getContext('2d'), {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Curva ROC (Logistic Reg.)',
+                        data: rocPoints,
+                        borderColor: colorTeal,
+                        backgroundColor: 'rgba(20, 184, 166, 0.15)',
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#0f172a',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4 // Suaviza la curva para que se vea muy profesional
+                    },
+                    {
+                        type: 'line',
+                        label: 'Clasificador Aleatorio',
+                        data: [{x: 0, y: 0}, {x: 1, y: 1}],
+                        borderColor: colorRose,
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Tasa de Falsos Positivos (1 - Especificidad)', font: { size: 14, weight: '500' }, color: '#e2e8f0' },
+                        min: 0, max: 1
+                    },
+                    y: {
+                        title: { display: true, text: 'Tasa de Verdaderos Positivos (Sensibilidad)', font: { size: 14, weight: '500' }, color: '#e2e8f0' },
+                        min: 0, max: 1.05
+                    }
+                },
+                plugins: {
+                    legend: { 
+                        position: 'top',
+                        labels: { color: '#f1f5f9', font: {size: 13} }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        callbacks: {
+                            label: function(context) {
+                                return `FPR: ${context.parsed.x.toFixed(2)} | TPR: ${context.parsed.y.toFixed(2)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
+

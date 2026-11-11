@@ -1,0 +1,104 @@
+{
+  "semilla": 2026,
+  "datos": {
+    "fuente": "UCI Machine Learning Repository, Heart Disease (Cleveland), DOI 10.24432/C52P4X",
+    "sha256": "a74b7efa387bc9d108d7d0115d831fe9b414b29ae7124f331b622b4efa0427c8",
+    "n_total": 303,
+    "n_variables": 14,
+    "faltantes": {
+      "ca": 4,
+      "thal": 2
+    },
+    "ids_con_faltantes": [
+      88,
+      167,
+      193,
+      267,
+      288,
+      303
+    ],
+    "n_completos": 297,
+    "duplicados": 0,
+    "distribucion_num": {
+      "0": 164,
+      "1": 55,
+      "2": 36,
+      "3": 35,
+      "4": 13
+    },
+    "eventos_ec": 139,
+    "prevalencia_ec": 0.45874587458745875,
+    "control_rangos": {
+      "age": 0,
+      "trestbps": 0,
+      "chol": 0,
+      "thalach": 0,
+      "oldpeak": 0,
+      "sex_codigos_invalidos": [],
+      "cp_codigos_invalidos": [],
+      "fbs_codigos_invalidos": [],
+      "restecg_codigos_invalidos": [],
+      "restecg_anormal_codigos_invalidos": [],
+      "exang_codigos_invalidos": [],
+      "slope_codigos_invalidos": [],
+      "thal_codigos_invalidos": [],
+      "ca_fuera_0_3": 0
+    },
+    "auditoria_kaggle": {
+      "n_kaggle": 303,
+      "n_emparejados": 303,
+      "registros_uci_unicos_emparejados": 302,
+      "duplicados_kaggle": 1,
+      "mapeo_kaggle_a_uci": {
+        "cp": {
+          "0": 4,
+          "1": 2,
+          "2": 3,
+          "3": 1
+        },
+        "restecg": {
+          "0": 2,
+          "1": 0,
+          "2": 1
+        },
+        "slope": {
+          "0": 3,
+          "1": 2,
+          "2": 1
+        },
+        "ca": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": null
+        },
+        "thal": {
+          "0": null,
+          "1": 6,
+          "2": 3,
+          "3": 7
+        },
+        "target": {
+          "0": 1,
+          "1": 0
+        }
+      },
+      "concordancia_target_kaggle_vs_ec_uci": 0.0,
+      "target_invertido": true,
+      "faltantes_ocultos_kaggle": {
+        "ca==4": 5,
+        "thal==0": 2
+      },
+      "media_thalach_por_target_kaggle": {
+        "0": 139.1,
+        "1": 158.5
+      },
+      "media_thalach_por_ec_uci": {
+        "0": 158.4,
+        "1": 139.3
+      }
+    },
+    "eventos_cc": 137
+  }
+}

@@ -1,0 +1,6 @@
+comparación,ΔAUC (IC 95 %),p Nadeau-Bengio,p DeLong
+RL extendida (+ imagen) vs RL básica (no invasiva),"0,035 (0,008 a 0,062)","0,012","0,021"
+RL básica (no invasiva) vs RL 4 continuas (semestre 1),"0,125 (0,070 a 0,180)","< 0,001","< 0,001"
+RL extendida (+ imagen) vs Árbol CART (extendido),"0,067 (0,021 a 0,113)","0,004","0,003"
+RL extendida (+ imagen) vs Random Forest (extendido),"-0,001 (-0,018 a 0,016)","0,936","0,908"
+Random Forest (extendido) vs Árbol CART (extendido),"0,068 (0,026 a 0,109)","0,002","< 0,001"

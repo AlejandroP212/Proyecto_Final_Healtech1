@@ -1,0 +1,15 @@
+\begin{table}[H]
+\caption{Desempeño en validación cruzada estratificada 5 × 20 (media y percentiles 2,5–97,5 del AUC).}
+\label{tab:desempeno}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Modelo & AUC & P2,5 & P97,5 & Brier & Pend. calib. & Sens. (0,5) & Esp. (0,5) & Esp. (sens. 90 \%) \\
+\midrule
+RL 4 continuas (semestre 1) & 0,749 & 0,612 & 0,865 & 0,205 & 0,934 & 0,650 & 0,769 & 0,344 \\
+RL básica (no invasiva) & 0,874 & 0,794 & 0,949 & 0,146 & 0,907 & 0,752 & 0,844 & 0,613 \\
+RL extendida (+ imagen) & 0,909 & 0,829 & 0,964 & 0,120 & 0,836 & 0,788 & 0,875 & 0,700 \\
+Árbol CART (extendido) & 0,842 & 0,715 & 0,940 & 0,163 & 0,258 & 0,737 & 0,875 & 0,519 \\
+Random Forest (extendido) & 0,910 & 0,833 & 0,964 & 0,127 & 1,587 & 0,759 & 0,875 & 0,719 \\
+\bottomrule
+\end{tabular}
+\end{table}
