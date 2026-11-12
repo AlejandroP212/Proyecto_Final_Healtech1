@@ -15,7 +15,9 @@ Cleveland Clinic Foundation (UCI *Heart Disease*). Responde dos preguntas:
 > calidad, ética, resultados, discusión, conclusiones, cronograma, presupuesto, referencias Vancouver y la correspondencia con la rúbrica.
 > Cifras actualizadas: [`results/RESUMEN_RESULTADOS.md`](results/RESUMEN_RESULTADOS.md).
 >
-> 📑 **Paper final:** [`paper/main.tex`](paper/main.tex) · 🎤 **Guía de la exposición:** [`presentacion/GUIA_PRESENTACION.md`](presentacion/GUIA_PRESENTACION.md)
+> 👋 **Angie, empieza por [`LEEME_ANGIE.md`](LEEME_ANGIE.md).**
+>
+> 📑 **Paper final:** [`paper/Paper_Healtech_Final.pdf`](paper/Paper_Healtech_Final.pdf) (fuente: [`paper/main.tex`](paper/main.tex)) · 🎤 **Guía de la exposición:** [`presentacion/GUIA_PRESENTACION.md`](presentacion/GUIA_PRESENTACION.md)
 
 ## Métodos en una línea
 
@@ -63,7 +65,7 @@ Cleveland Clinic Foundation (UCI *Heart Disease*). Responde dos preguntas:
 │   ├── documento_proyecto.md     # documento maestro (protocolo + resultados): base del paper
 │   ├── diccionario_variables.md  # generado automáticamente
 │   └── lineamientos/        # rúbrica de evaluación y guía de protocolo del curso
-├── paper/                   # paper final en LaTeX (main.tex + plantilla + Figuras/): subir la carpeta tal cual a Overleaf
+├── paper/                   # paper final: Paper_Healtech_Final.pdf + fuente LaTeX (main.tex, plantilla, Figuras/)
 ├── presentacion/            # GUIA_PRESENTACION.md: estructura, guion, cifras clave y preguntas para la exposición
 ├── archivo/semestre_2_presentaciones_previas/  # presentaciones de avance del semestre 2 (base de diseño)
 └── Makefile                 # setup · all · verify · clean

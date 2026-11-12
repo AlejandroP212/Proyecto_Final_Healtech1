@@ -32,3 +32,6 @@ Thumbs.db
 *.fdb_latexmk
 *.bbl
 *.blg
+
+# Metadatos de Windows (descargas)
+*:Zone.Identifier

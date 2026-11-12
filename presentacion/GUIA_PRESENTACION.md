@@ -11,7 +11,7 @@ cuánto tiempo y qué criterio de la rúbrica cubre**. Solo hay que armar las di
 |---|---|
 | Figuras (PNG, 300 dpi, listas para pegar) | `results/figures/fig01` … `fig13` |
 | Texto completo con todas las cifras | `docs/documento_proyecto.md` |
-| Paper final (LaTeX) | `paper/main.tex` |
+| Paper final (PDF) | `paper/Paper_Healtech_Final.pdf` |
 | Diseño base (mismo estilo de las presentaciones anteriores) | `archivo/semestre_2_presentaciones_previas/Presentacion_Estructura_Tablero.html` (Reveal.js: se puede copiar y reemplazar el contenido) |
 | Rúbrica con la que nos evalúan | `docs/lineamientos/Rubrica_evaluacion_pares.docx` |
 
