@@ -562,5 +562,128 @@
       "epv_requerido": 10.36522083580907
     },
     "margen_prevalencia_alcanzado": 0.05669355518739322
+  },
+  "regresion_lineal_preliminar": {
+    "modelo_lineal_probabilidad": {
+      "R2": 0.470910557411094,
+      "R2_ajustado": 0.44464370565136113,
+      "pred_min": -0.3060229355219108,
+      "pred_max": 1.1851018581344073,
+      "n_pred_fuera_0_1": 43,
+      "shapiro_residuos_p": 0.07451990600295336,
+      "breusch_pagan_p": 0.0025799991511559345
+    },
+    "regresion_presion_arterial": {
+      "R2": 0.1120032756505458,
+      "R2_ajustado": 0.09983893696082724,
+      "F_p": 5.098243995248908e-07,
+      "coeficientes": {
+        "const": {
+          "beta": 98.3452686214485,
+          "p": 1.832436540330224e-31
+        },
+        "age": {
+          "beta": 0.4971261562889617,
+          "p": 1.2238466455637235e-05
+        },
+        "sex": {
+          "beta": -1.308771621418417,
+          "p": 0.5410908938557494
+        },
+        "chol": {
+          "beta": 0.02442314838111523,
+          "p": 0.2130745486556584
+        },
+        "fbs": {
+          "beta": 7.450557211351299,
+          "p": 0.008393069206228492
+        }
+      },
+      "shapiro_residuos_p": 0.003577215220044082,
+      "breusch_pagan_LM": 12.226079425560291,
+      "breusch_pagan_p": 0.015746927156533776,
+      "var_residual_edad_menor_55": 211.76085027795946,
+      "var_residual_edad_mayor_igual_55": 338.29839858174574
+    }
+  },
+  "or_por_rangos": {
+    "Edad ≥ 55 años": {
+      "a": 95,
+      "b": 64,
+      "c": 42,
+      "d": 96,
+      "OR": 3.392857142857143,
+      "IC95_inf": 2.0960705399626436,
+      "IC95_sup": 5.49193329726484,
+      "p": 4.3184406181528954e-07,
+      "prueba": "Chi² de Pearson",
+      "pct_ec_expuestos": 59.74842767295598,
+      "pct_ec_no_expuestos": 30.434782608695652
+    },
+    "PAS en reposo ≥ 140 mmHg": {
+      "a": 54,
+      "b": 44,
+      "c": 83,
+      "d": 116,
+      "OR": 1.715224534501643,
+      "IC95_inf": 1.0532112944733474,
+      "IC95_sup": 2.7933570587348346,
+      "p": 0.029468183054303078,
+      "prueba": "Chi² de Pearson",
+      "pct_ec_expuestos": 55.10204081632653,
+      "pct_ec_no_expuestos": 41.70854271356784
+    },
+    "Colesterol ≥ 240 mg/dL": {
+      "a": 79,
+      "b": 76,
+      "c": 58,
+      "d": 84,
+      "OR": 1.5054446460980035,
+      "IC95_inf": 0.9508350054034416,
+      "IC95_sup": 2.38355084697741,
+      "p": 0.08044891361844897,
+      "prueba": "Chi² de Pearson",
+      "pct_ec_expuestos": 50.96774193548387,
+      "pct_ec_no_expuestos": 40.84507042253521
+    },
+    "FC máxima < 85 % de la esperada (220 − edad)": {
+      "a": 65,
+      "b": 25,
+      "c": 72,
+      "d": 135,
+      "OR": 4.875,
+      "IC95_inf": 2.8330964432669465,
+      "IC95_sup": 8.388569000706166,
+      "p": 2.708766210945683e-09,
+      "prueba": "Chi² de Pearson",
+      "pct_ec_expuestos": 72.22222222222223,
+      "pct_ec_no_expuestos": 34.78260869565217
+    },
+    "Depresión del ST ≥ 1 mm": {
+      "a": 91,
+      "b": 45,
+      "c": 46,
+      "d": 115,
+      "OR": 5.055555555555555,
+      "IC95_inf": 3.0833472405778806,
+      "IC95_sup": 8.289251900969298,
+      "p": 4.006536214465012e-11,
+      "prueba": "Chi² de Pearson",
+      "pct_ec_expuestos": 66.91176470588235,
+      "pct_ec_no_expuestos": 28.571428571428573
+    },
+    "FC máxima ≤ 162 lpm (corte del Taller 2)": {
+      "a": 117,
+      "b": 89,
+      "c": 20,
+      "d": 71,
+      "OR": 4.66685393258427,
+      "IC95_inf": 2.6455302063757737,
+      "IC95_sup": 8.232574920365012,
+      "p": 2.872550403474378e-08,
+      "prueba": "Chi² de Pearson",
+      "pct_ec_expuestos": 56.79611650485437,
+      "pct_ec_no_expuestos": 21.978021978021978
+    }
   }
 }

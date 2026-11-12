@@ -1,15 +1,32 @@
-# Variables clínicas no invasivas y enfermedad coronaria angiográfica
+# Factores de riesgo cardiovascular y predicción de enfermedad coronaria
+
+**Un enfoque de ciencia de datos con regresión logística y árboles de decisión en pacientes remitidos a angiografía**
 
 **HealthTech 1 y 2 · Pregrado en Ciencia de Datos aplicada a la Salud · Universidad Externado de Colombia**
 Angie Milena Tobar Aguirre · Alejandro Pardo Costo · Docente: Eliana Andrea González Artunduaga
 
 Estudio observacional analítico de corte transversal con datos secundarios: 303 pacientes remitidos a angiografía coronaria en la
-Cleveland Clinic Foundation (UCI Heart Disease). Responde a dos preguntas:
-- ¿Qué variables de consulta, del ECG de reposo y de la prueba de esfuerzo se asocian de forma independiente con la enfermedad coronaria?
-- ¿Qué tan bien la predice un modelo construido solo con ellas, frente a uno que añade estudios de imagen?
+Cleveland Clinic Foundation (UCI *Heart Disease*). Responde dos preguntas:
+- ¿Qué factores de riesgo cardiovascular y hallazgos clínicos de consulta, ECG y prueba de esfuerzo se asocian de forma independiente con la enfermedad coronaria?
+- ¿Qué tan bien la predicen la regresión logística, un árbol de decisión y un Random Forest, con y sin estudios de imagen?
 
-> El planteamiento completo (pregunta, hipótesis H0/H1, objetivos, población, variables, métodos, limitaciones y ética) está en
-> **[`docs/plan_analisis.md`](docs/plan_analisis.md)**. Los resultados actualizados están en **[`results/RESUMEN_RESULTADOS.md`](results/RESUMEN_RESULTADOS.md)**.
+> 📄 **Documento completo del proyecto:** **[`docs/documento_proyecto.md`](docs/documento_proyecto.md)**. Incluye título, resumen, problema,
+> vacío, justificación, objetivos, hipótesis H0/H1, población y muestra, variables, **algoritmos con sus parámetros**, control de
+> calidad, ética, resultados, discusión, conclusiones, cronograma, presupuesto, referencias Vancouver y la correspondencia con la rúbrica.
+> Cifras actualizadas: [`results/RESUMEN_RESULTADOS.md`](results/RESUMEN_RESULTADOS.md).
+>
+> 📑 **Paper final:** [`paper/main.tex`](paper/main.tex) · 🎤 **Guía de la exposición:** [`presentacion/GUIA_PRESENTACION.md`](presentacion/GUIA_PRESENTACION.md)
+
+## Métodos en una línea
+
+| Etapa | Técnicas |
+|---|---|
+| Datos | Base oficial UCI Cleveland (SHA-256), depuración, control de calidad, auditoría de la versión Kaggle |
+| Descriptivo | Shapiro-Wilk → U de Mann-Whitney / t de Welch; chi² / Fisher / Monte Carlo; IC de Wilson; Spearman |
+| Paso preliminar | Modelo lineal de probabilidad y regresión lineal de la presión arterial (Shapiro-Wilk, Breusch-Pagan): justifican la regresión logística |
+| Asociación | OR por rangos clínicos (tablas 2 × 2, IC de Woolf); regresión logística por máxima verosimilitud: OR crudos y ajustados; Box-Tidwell, VIF, Hosmer-Lemeshow, Cook; tamaño de muestra de Riley (2020) |
+| Predicción | RL con L2 (básica, 11 variables no invasivas; extendida, 13), árbol CART con validación cruzada anidada, Random Forest (300 árboles) |
+| Validación | Validación cruzada estratificada 5 × 20, bootstrap de optimismo (500), AUC con IC de DeLong, calibración, umbral de sensibilidad del 90 %, t de Nadeau-Bengio |
 
 ## Hallazgos principales
 
@@ -33,21 +50,21 @@ Cleveland Clinic Foundation (UCI Heart Disease). Responde a dos preguntas:
 │   ├── 00_configuracion.ipynb      # rutas, semilla, diccionario de variables, predictores, paleta, utilidades
 │   ├── 01_datos_y_auditoria.ipynb  # SHA-256, depuración, control de calidad, auditoría Kaggle vs. UCI
 │   ├── 02_descriptivo.ipynb        # Tabla 1 (Shapiro-Wilk → prueba adecuada), figuras 3–5
-│   ├── 03_asociacion.ipynb         # OR crudos/ajustados, supuestos, H-1, tamaño de muestra (Riley)
+│   ├── 03_asociacion.ipynb         # paso preliminar (regresión lineal), OR crudos/ajustados, supuestos, H-1, tamaño de muestra (Riley)
 │   ├── 04_modelos_predictivos.ipynb# CV 5×20, bootstrap, DeLong, Nadeau-Bengio, calibración, H-2 a H-4
 │   └── 05_resumen_resultados.ipynb # integra results/resultados.json y RESUMEN_RESULTADOS.md
 ├── results/
-│   ├── figures/             # fig01–fig11 (PNG, 300 dpi)
-│   ├── tables/              # tabla1–tabla4 (CSV + LaTeX) y detalle de OR
+│   ├── figures/             # fig01–fig13 (PNG, 300 dpi)
+│   ├── tables/              # tabla1–tabla4 y tabla2b (CSV + LaTeX) y detalle de OR
 │   ├── json/                # resultados parciales de cada notebook
 │   ├── resultados.json      # todas las cifras, en formato legible por máquina
 │   └── RESUMEN_RESULTADOS.md
 ├── docs/
-│   ├── plan_analisis.md     # protocolo: fuente única de verdad del proyecto
+│   ├── documento_proyecto.md     # documento maestro (protocolo + resultados): base del paper
 │   ├── diccionario_variables.md  # generado automáticamente
 │   └── lineamientos/        # rúbrica de evaluación y guía de protocolo del curso
-├── paper/                   # (en construcción) artículo en LaTeX según el protocolo; ya contiene la plantilla de estilo
-├── presentacion/            # (en construcción) presentación final de 30–45 min
+├── paper/                   # paper final en LaTeX (main.tex + plantilla + Figuras/): subir la carpeta tal cual a Overleaf
+├── presentacion/            # GUIA_PRESENTACION.md: estructura, guion, cifras clave y preguntas para la exposición
 ├── archivo/semestre_2_presentaciones_previas/  # presentaciones de avance del semestre 2 (base de diseño)
 └── Makefile                 # setup · all · verify · clean
 ```
@@ -82,13 +99,14 @@ Reglas del proyecto:
 | 03 | Variables cuantitativas por diagnóstico | 09 | Árbol de decisión final |
 | 04 | Proporción de EC por variable cualitativa | 10 | Distribución del AUC en 100 particiones |
 | 05 | Correlaciones de Spearman | 11 | Compromiso sensibilidad–especificidad |
-| 06 | Forest plot de OR crudos y ajustados | | |
+| 06 | Forest plot de OR crudos y ajustados | 12 | Paso preliminar: la regresión lineal no cumple los supuestos |
+| | | 13 | OR por rangos clínicos (Taller 2, corregido) |
 
 ## Historial
 
 - **Semestre 1 (HealthTech 1):** análisis con la versión de Kaggle de la base (regresión lineal y logística con 4 variables). Ese material se
   retiró del árbol de trabajo porque sus conclusiones dependen de la etiqueta invertida. Sigue disponible en el historial de git
-  (commit `f68b048`). Los cambios metodológicos están documentados en `docs/plan_analisis.md` §12.
+  (commit `f68b048`). Los cambios metodológicos están documentados en `docs/documento_proyecto.md`, Anexo E.
 - **Semestre 2 (HealthTech 2):** reanálisis completo con la base oficial de UCI, el protocolo de investigación y validación interna rigurosa.
 
 ## Datos y citación

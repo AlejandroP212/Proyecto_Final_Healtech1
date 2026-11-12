@@ -9,7 +9,7 @@ NOTEBOOKS = notebooks/01_datos_y_auditoria.ipynb notebooks/02_descriptivo.ipynb 
             notebooks/05_resumen_resultados.ipynb
 EXEC = $(PY) -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800
 
-.PHONY: setup all verify clean
+.PHONY: setup all verify clean paper-figs
 
 setup:
 	python3 -m venv --clear .venv
@@ -18,6 +18,11 @@ setup:
 
 all:
 	@for nb in $(NOTEBOOKS); do echo ">> $$nb"; $(EXEC) $$nb || exit 1; done
+	$(MAKE) paper-figs
+
+# Copia las figuras al paper para que paper/ sea autocontenido (subir la carpeta tal cual a Overleaf)
+paper-figs:
+	cp results/figures/*.png paper/Figuras/
 
 verify:
 	cp results/resultados.json results/.resultados_prev.json
