@@ -8,6 +8,7 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \input{parametros.sty}
+\raggedbottom % evita que LaTeX estire el espacio vertical para llenar columnas (huecos en blanco)
 
 \setcitestyle{numbers,square}
 \graphicspath{{Figuras/}}
@@ -301,12 +302,12 @@ Talio: defecto reversible & 11,19 (6,35--19,70) & $<0{,}001$ & --- & --- & 4,03 
 \end{tabular}
 \end{table*}
 
-\begin{figure}[H]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig06_forest_odds_ratios.png}
+\includegraphics[width=0.78\textwidth]{fig06_forest_odds_ratios.png}
 \caption{OR crudos (gris) y ajustados en los modelos b\'asico (azul) y extendido (naranja), en escala logar\'itmica.}
 \label{fig:forest}
-\end{figure}
+\end{figure*}
 
 \subsection{Desempe\~no predictivo (H-2 a H-4)}
 El modelo b\'asico alcanz\'o un AUC de 0,874 en validaci\'on cruzada, con IC de DeLong de 0,836 a 0,914 y un AUC de 0,880 corregido por optimismo (optimismo de 0,021). Por tanto, se rechaza H0 de H-2. Su pendiente de calibraci\'on fue de 0,91 (Tabla~\ref{tab:desempeno}, Figs.~\ref{fig:roc} y~\ref{fig:calib}). La imagen aument\'o el AUC en 0,035 (IC 95\,\% 0,008--0,062; $p=0{,}012$), y se rechaza H0 de H-3. La RL extendida super\'o al \'arbol ($\Delta$AUC 0,067; IC 0,021--0,113; $p=0{,}004$), y se rechaza H0 de H-4. No difiri\'o del Random Forest ($\Delta$AUC $-0{,}001$; $p=0{,}94$). El \'arbol estuvo sobreajustado (pendiente de calibraci\'on de 0,26) y fue inestable: sus hiperpar\'ametros modales (profundidad 4, hojas de al menos 10 pacientes) se eligieron solo en el 32\,\% de las particiones. Con 4 variables (M0), el AUC fue de 0,749, de modo que M1 lo mejor\'o en 0,125 ($p<0{,}001$).
